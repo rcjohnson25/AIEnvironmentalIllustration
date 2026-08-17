@@ -10,7 +10,7 @@
 .kicker{font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase;margin-bottom:16px}.title{font:500 clamp(30px,3.4vw,48px) 'IBM Plex Serif',serif;line-height:1.04;margin:0 0 14px;max-width:620px}.intro{color:var(--sub);line-height:1.6;max-width:580px;margin:0 0 34px}.section{margin:28px 0}.label{display:block;color:var(--sub);font:500 14px 'IBM Plex Serif',serif;margin-bottom:10px}.models{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.chip{border:1px solid var(--border);background:#111;color:var(--sub);border-radius:4px;padding:10px 8px;font-size:12px;cursor:pointer;transition:.18s}.chip:hover{border-color:#3b3b3b;color:var(--text)}.chip.active{background:var(--cyan);color:#071114;border-color:var(--cyan)}
 .scenarios{display:grid;grid-template-columns:1fr 1fr;gap:8px}.scenario{border:1px solid var(--border);background:#111;padding:12px;border-radius:4px;text-align:left;color:var(--text);cursor:pointer;min-height:68px}.scenario:hover{border-color:#454545}.scenario.active{border-color:var(--cyan);box-shadow:inset 0 0 10px rgba(0,217,255,.11)}.scenario b{display:block;font-size:13px;margin-bottom:4px}.scenario span{font:400 11px 'IBM Plex Mono';color:var(--muted)}.scenario.active span{color:var(--cyan)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.input{width:100%;background:#0F0F0F;border:1.5px solid var(--border);color:var(--text);padding:12px 13px;border-radius:4px;font:400 14px 'IBM Plex Mono';outline:none}.input:focus{border-color:var(--cyan);box-shadow:inset 0 0 8px rgba(21,152,174,.10)}select.input{font-family:Inter}.btn{width:100%;margin-top:22px;border:0;border-radius:4px;background:var(--cyan);color:#081114;font-weight:600;padding:14px 18px;cursor:pointer;transition:.18s}.btn:hover{background:var(--cyan2);box-shadow:0 0 12px rgba(0,217,255,.35)}.btn:active{transform:scale(.98)}.method{font-size:11px;color:var(--muted);line-height:1.55;margin-top:18px}.method details{border-top:1px solid var(--border);padding-top:14px}.method summary{cursor:pointer;color:var(--sub)}
-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer}.readout{position:absolute;top:40px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none}.amount{font:500 clamp(34px,5vw,68px) 'IBM Plex Mono';color:var(--cyan);text-shadow:none}.caption{font-size:12px;color:var(--sub);letter-spacing:.08em;text-transform:uppercase;margin-top:4px}.comparison{font:400 13px 'IBM Plex Mono';color:var(--sub);margin-top:10px}.legend{position:absolute;left:28px;bottom:28px;display:grid;gap:8px;font-size:12px;color:var(--sub);background:rgba(15,15,15,.58);backdrop-filter:blur(6px);padding:12px 14px;border:1px solid rgba(42,42,42,.8);border-radius:4px}.legend div{display:flex;align-items:center;gap:8px}.dot{width:7px;height:7px;border-radius:50%;box-shadow:0 0 8px currentColor}.scale{position:absolute;left:24px;top:24px;font:400 11px 'IBM Plex Mono';color:var(--muted)}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer;contain:strict}.readout{position:absolute;top:40px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none}.amount{font:500 clamp(34px,5vw,68px) 'IBM Plex Mono';color:var(--cyan);text-shadow:none}.caption{font-size:12px;color:var(--sub);letter-spacing:.08em;text-transform:uppercase;margin-top:4px}.comparison{font:400 13px 'IBM Plex Mono';color:var(--sub);margin-top:10px}.legend{position:absolute;left:28px;bottom:28px;display:grid;gap:8px;font-size:12px;color:var(--sub);background:rgba(15,15,15,.58);padding:12px 14px;border:1px solid rgba(42,42,42,.8);border-radius:4px}.legend div{display:flex;align-items:center;gap:8px}.dot{width:7px;height:7px;border-radius:50%;box-shadow:0 0 8px currentColor}.scale{position:absolute;left:24px;top:24px;font:400 11px 'IBM Plex Mono';color:var(--muted)}
 @media(max-width:900px){.app{grid-template-columns:1fr}.form{border-right:0;border-bottom:1px solid var(--border)}.viz{min-height:720px}.models{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.form{padding:30px 20px}.scenarios,.row{grid-template-columns:1fr}.viz{min-height:620px}.legend{left:14px;bottom:14px}.scale{left:14px;top:14px}}
 @media(prefers-reduced-motion:reduce){.btn,.chip,.scenario{transition:none}}
@@ -21,7 +21,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor
   .form{height:100vh!important;border-right:1px solid var(--border)!important}
   .viz{height:100vh!important;min-height:0!important}
 }
-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer;contain:strict}
 </style>
 </head>
 <body>
@@ -102,13 +102,13 @@ document.getElementById('calculate').onclick=()=>{
 };
 const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d'),viz=document.getElementById('viz');
 let W=0,H=0,DPR=1,particles=[],pending=0,unitML=1,last=0;
-const MAX_PARTICLES=1100;
+const MAX_PARTICLES=620;
 let particleRadius=4, fillFraction=0, targetWaterY=0;
 const FLOOR_PAD=7;
 const WALL_PAD=5;
 
 function resize(){
-  DPR=Math.min(2,devicePixelRatio||1);
+  DPR=Math.min(1.25,devicePixelRatio||1);
   W=viz.clientWidth; H=viz.clientHeight;
   canvas.width=W*DPR; canvas.height=H*DPR;
   ctx.setTransform(DPR,0,0,DPR,0,0);
@@ -127,7 +127,7 @@ function spawnPlan(ml){
 
   // Use a dense, stable bed. Area needed for a granular bed of target height:
   // A ~= width * targetHeight * packing. Extra factor compensates for mound/edge voids.
-  const desired=targetGal>0 ? Math.round(620 + fillFraction*480) : 0;
+  const desired=targetGal>0 ? Math.round(360 + fillFraction*260) : 0;
   const targetHeight=scaleH*fillFraction;
   targetWaterY=bottomY-targetHeight;
   const effectivePacking=.74;
@@ -191,7 +191,7 @@ let lastDragSplash=0;
 canvas.addEventListener('pointermove',e=>{
   if(!e.buttons && e.pointerType==='mouse') return;
   const now=performance.now();
-  if(now-lastDragSplash<70) return;
+  if(now-lastDragSplash<95) return;
   lastDragSplash=now;
   const p=pointerPos(e);
   splashAt(p.x,p.y);
@@ -229,10 +229,9 @@ function physics(){
 
   // Spatial hash grid: each particle only checks its own cell and nearby cells.
   // This preserves the same collision response while avoiding O(n^2) comparisons.
-  const maxR=particles.reduce((m,p)=>Math.max(m,p.r),4);
-  const cellSize=Math.max(12,maxR*2.35);
+  const cellSize=Math.max(12,particleRadius*2.7);
 
-  for(let pass=0; pass<8; pass++){
+  for(let pass=0; pass<3; pass++){
     const grid=new Map();
 
     for(let i=0;i<particles.length;i++){
@@ -350,9 +349,7 @@ function draw(t){
   for(const a of particles){
     ctx.save();
     ctx.fillStyle='#1598AE';
-    ctx.shadowColor='rgba(21,152,174,.45)';
-    ctx.shadowBlur=3;
-    ctx.globalAlpha=.88+.10*Math.sin(t*.0015+a.phase);
+    ctx.globalAlpha=.94;
     ctx.beginPath(); ctx.arc(a.x,a.y,a.r,0,Math.PI*2); ctx.fill();
     ctx.restore();
   }
@@ -425,12 +422,21 @@ function draw(t){
   ctx.setLineDash([]);
   ctx.restore();
 }
+let lastFrameTime=0;
 function loop(t){
+  // Exhibition-friendly 45fps cap. Touch interaction remains responsive while
+  // avoiding unnecessary 60/120Hz work on high-refresh tablets.
+  if(t-lastFrameTime < 22){
+    requestAnimationFrame(loop);
+    return;
+  }
+  lastFrameTime=t;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(!reduced){
-    // Slightly slower pour so the accumulating, colliding pile is legible.
-    if(pending>0 && t-last>8){
-      addParticle(); pending--; shownML+=unitML; last=t;
+    // Spawn a few per rendered frame rather than running hundreds of tiny timed checks.
+    let batch=0;
+    while(pending>0 && batch<3){
+      addParticle(); pending--; shownML+=unitML; batch++;
     }
     physics();
   }
