@@ -5,35 +5,46 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>AI Water Usage Visualizer</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:wght@500&family=Inter:wght@400;500;600&display=swap');
-:root{--bg:#000000;--panel:#080808;--cyan:#0B6F82;--cyan2:#0D7C90;--text:#F5F3F0;--sub:#B0AEA8;--muted:#6B6A67;--border:#2A2A2A;--shower:#477D7D;--laundry:#668F8F}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}body{min-height:100vh}.app{height:100vh;display:grid;grid-template-columns:30% 70%;overflow:hidden}.form{background:var(--panel);border-right:1px solid var(--border);padding:34px clamp(24px,2.8vw,48px);overflow:auto;height:100vh}.viz{position:relative;height:100vh;overflow:hidden;background:radial-gradient(circle at 70% 88%,rgba(11,111,130,.012),transparent 42%),var(--bg)}
-.kicker{font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase;margin-bottom:16px}.title{font:500 clamp(30px,3.4vw,48px) 'IBM Plex Serif',serif;line-height:1.04;margin:0 0 14px;max-width:620px}.intro{color:var(--sub);line-height:1.6;max-width:580px;margin:0 0 34px}.section{margin:28px 0}.label{display:block;color:var(--sub);font:500 14px 'IBM Plex Serif',serif;margin-bottom:10px}.models{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.chip{border:1px solid var(--border);background:#050505;color:var(--sub);border-radius:4px;padding:10px 8px;font-size:12px;cursor:pointer;transition:.18s}.chip:hover{border-color:#3b3b3b;color:var(--text)}.chip.active{background:var(--cyan);color:#071114;border-color:var(--cyan)}
-.scenarios{display:grid;grid-template-columns:1fr 1fr;gap:8px}.scenario{border:1px solid var(--border);background:#050505;padding:12px;border-radius:4px;text-align:left;color:var(--text);cursor:pointer;min-height:68px}.scenario:hover{border-color:#454545}.scenario.active{border-color:var(--cyan);box-shadow:inset 0 0 10px rgba(0,217,255,.11)}.scenario b{display:block;font-size:13px;margin-bottom:4px}.scenario span{font:400 11px 'IBM Plex Mono';color:var(--muted)}.scenario.active span{color:var(--cyan)}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.input{width:100%;background:#0F0F0F;border:1.5px solid var(--border);color:var(--text);padding:12px 13px;border-radius:4px;font:400 14px 'IBM Plex Mono';outline:none}.input:focus{border-color:var(--cyan);box-shadow:inset 0 0 8px rgba(11,111,130,.05)}select.input{font-family:Inter}.btn{width:100%;margin-top:22px;border:0;border-radius:4px;background:var(--cyan);color:#081114;font-weight:600;padding:14px 18px;cursor:pointer;transition:.18s}.btn:hover{background:var(--cyan2);box-shadow:0 0 12px rgba(0,217,255,.35)}.btn:active{transform:scale(.98)}.method{font-size:11px;color:var(--muted);line-height:1.55;margin-top:18px}.method details{border-top:1px solid var(--border);padding-top:14px}.method summary{cursor:pointer;color:var(--sub)}
-canvas{position:absolute;inset:0;width:100%;height:100%}.readout{position:absolute;top:40px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none}.amount{font:500 clamp(34px,5vw,68px) 'IBM Plex Mono';color:var(--cyan);text-shadow:0 0 18px rgba(0,217,255,.25)}.caption{font-size:12px;color:var(--sub);letter-spacing:.08em;text-transform:uppercase;margin-top:4px}.comparison{font:400 13px 'IBM Plex Mono';color:var(--sub);margin-top:10px}.legend{position:absolute;left:28px;bottom:28px;display:grid;gap:8px;font-size:12px;color:var(--sub);background:rgba(15,15,15,.58);backdrop-filter:blur(6px);padding:12px 14px;border:1px solid rgba(42,42,42,.8);border-radius:4px}.legend div{display:flex;align-items:center;gap:8px}.dot{width:7px;height:7px;border-radius:50%;box-shadow:0 0 8px currentColor}.scale{position:absolute;right:28px;bottom:28px;font:400 11px 'IBM Plex Mono';color:var(--muted)}
+:root{--bg:#0F0F0F;--panel:#1A1A1A;--cyan:#1598AE;--cyan2:#20A8BC;--text:#F5F3F0;--sub:#B0AEA8;--muted:#6B6A67;--border:#2A2A2A;--shower:#66B3B3;--laundry:#99CCCC}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}body{min-height:100vh}.app{height:100vh;display:grid;grid-template-columns:30% 70%;overflow:hidden}.form{background:var(--panel);border-right:1px solid var(--border);padding:34px clamp(24px,2.8vw,48px);overflow:auto;height:100vh}.viz{position:relative;height:100vh;overflow:hidden;background:radial-gradient(circle at 70% 88%,rgba(21,152,174,.025),transparent 42%),var(--bg)}
+.kicker{font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase;margin-bottom:16px}.title{font:500 clamp(30px,3.4vw,48px) 'IBM Plex Serif',serif;line-height:1.04;margin:0 0 14px;max-width:620px}.intro{color:var(--sub);line-height:1.6;max-width:580px;margin:0 0 34px}.section{margin:28px 0}.label{display:block;color:var(--sub);font:500 14px 'IBM Plex Serif',serif;margin-bottom:10px}.models{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.chip{border:1px solid var(--border);background:#111;color:var(--sub);border-radius:4px;padding:10px 8px;font-size:12px;cursor:pointer;transition:.18s}.chip:hover{border-color:#3b3b3b;color:var(--text)}.chip.active{background:var(--cyan);color:#071114;border-color:var(--cyan)}
+.scenarios{display:grid;grid-template-columns:1fr 1fr;gap:8px}.scenario{border:1px solid var(--border);background:#111;padding:12px;border-radius:4px;text-align:left;color:var(--text);cursor:pointer;min-height:68px}.scenario:hover{border-color:#454545}.scenario.active{border-color:var(--cyan);box-shadow:inset 0 0 10px rgba(0,217,255,.11)}.scenario b{display:block;font-size:13px;margin-bottom:4px}.scenario span{font:400 11px 'IBM Plex Mono';color:var(--muted)}.scenario.active span{color:var(--cyan)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.input{width:100%;background:#0F0F0F;border:1.5px solid var(--border);color:var(--text);padding:12px 13px;border-radius:4px;font:400 14px 'IBM Plex Mono';outline:none}.input:focus{border-color:var(--cyan);box-shadow:inset 0 0 8px rgba(21,152,174,.10)}select.input{font-family:Inter}.btn{width:100%;margin-top:22px;border:0;border-radius:4px;background:var(--cyan);color:#081114;font-weight:600;padding:14px 18px;cursor:pointer;transition:.18s}.btn:hover{background:var(--cyan2);box-shadow:0 0 12px rgba(0,217,255,.35)}.btn:active{transform:scale(.98)}.method{font-size:11px;color:var(--muted);line-height:1.55;margin-top:18px}.method details{border-top:1px solid var(--border);padding-top:14px}.method summary{cursor:pointer;color:var(--sub)}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer}.readout{position:absolute;top:40px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none}.amount{font:500 clamp(34px,5vw,68px) 'IBM Plex Mono';color:var(--cyan);text-shadow:none}.caption{font-size:12px;color:var(--sub);letter-spacing:.08em;text-transform:uppercase;margin-top:4px}.comparison{font:400 13px 'IBM Plex Mono';color:var(--sub);margin-top:10px}.legend{position:absolute;left:28px;bottom:28px;display:grid;gap:8px;font-size:12px;color:var(--sub);background:rgba(15,15,15,.58);backdrop-filter:blur(6px);padding:12px 14px;border:1px solid rgba(42,42,42,.8);border-radius:4px}.legend div{display:flex;align-items:center;gap:8px}.dot{width:7px;height:7px;border-radius:50%;box-shadow:0 0 8px currentColor}.scale{position:absolute;left:24px;top:24px;font:400 11px 'IBM Plex Mono';color:var(--muted)}
 @media(max-width:900px){.app{grid-template-columns:1fr}.form{border-right:0;border-bottom:1px solid var(--border)}.viz{min-height:720px}.models{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){.form{padding:30px 20px}.scenarios,.row{grid-template-columns:1fr}.viz{min-height:620px}.legend{left:14px;bottom:14px}.scale{right:14px;bottom:14px}}
+@media(max-width:520px){.form{padding:30px 20px}.scenarios,.row{grid-template-columns:1fr}.viz{min-height:620px}.legend{left:14px;bottom:14px}.scale{left:14px;top:14px}}
 @media(prefers-reduced-motion:reduce){.btn,.chip,.scenario{transition:none}}
-.readout,.legend,.scale{z-index:2}
-canvas{z-index:0}
+</style>
+<style>
+@media (max-width:1000px){
+  .app{grid-template-columns:30% 70%!important;height:100vh!important}
+  .form{height:100vh!important;border-right:1px solid var(--border)!important}
+  .viz{height:100vh!important;min-height:0!important}
+}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer}
+</style>
 </head>
 <body>
 <div class="app">
 <section class="form">
-
-<h1 class="title">How much water is your AI using?</h1>
-<p class="intro">Choose a model, a typical response, and how often you use it. The pool visualizes your impact.</p>
+<h1 class="title">How much water does your AI usage take up?</h1>
+<p class="intro">Choose a model, a typical response, and how often you use it. The visualization translates the estimate into familiar everyday water use.</p>
 <div class="section"><label class="label">AI model</label><div class="models" id="models"></div></div>
 <div class="section"><label class="label">Typical response</label><div class="scenarios" id="scenarios"></div></div>
 <div class="section row">
-<div><label class="label" for="prompts">Prompts per day</label><input id="prompts" class="input" type="number" min="1" max="10000" value="10"></div>
+<div><label class="label" for="prompts">Prompts per day</label><input id="prompts" class="input" type="number" min="1" max="500" value="10"></div>
 <div><label class="label" for="period">Time period</label><select id="period" class="input"><option value="1">One day</option><option value="7">One week</option><option value="30" selected>One month</option><option value="365">One year</option></select></div>
 </div>
 <button class="btn" id="calculate">Calculate usage</button>
 <div class="method"><details><summary>How is this estimated?</summary><p>Values use the supplied EcoLogits-derived model/scenario estimates as fixed baselines. The calculator multiplies the selected per-request estimate by requests per day and days. These are modeled estimates, not direct measurements of an individual request; real water use varies with hardware, cooling, datacenter conditions and workload.</p></details></div>
 </section>
-<section class="viz" id="viz"><canvas id="canvas"></canvas><div class="waterRefs" id="waterRefs" aria-hidden="true"></div><div class="readout"><div class="amount" id="amount">2.88 L</div><div class="caption">Estimated AI water use</div><div class="comparison" id="comparison">≈ 3% of one shower</div></div><div class="legend"><div><i class="dot" style="color:#0B6F82;background:#0B6F82"></i><span id="aiLegend">Your AI usage</span></div><div><i class="dot" style="color:#66B3B3;background:#66B3B3"></i><span>One shower · ~25.1 gal</span></div><div><i class="dot" style="color:#99CCCC;background:#99CCCC"></i><span>One laundry load · ~44.9 gal</span></div></div><div class="scale" id="scale"></div></section>
+<section class="viz" id="viz"><canvas id="canvas"></canvas>
+<div class="readout">
+  <div class="amount" id="amount">—</div>
+  <div class="caption">Estimated AI water use</div>
+  <div class="comparison" id="comparison">—</div>
+</div>
+<div class="scale" id="scale"></div></section>
 </div>
 <script>
 const DATA={
@@ -48,62 +59,51 @@ const DATA={
 'Gemini 3.1 Flash-Lite':[0.064,0.193,0.279,0.441,5.38,16.1,108,537]
 };
 const SCENARIOS=[['A tweet','40 words'],['A short email','130 words'],['An article summary','190 words'],['A chatbot reply','300 words'],['A 5-page report','3,800 words'],['A long document','11,000 words'],['Coding / agent session','~100,000 tokens'],['Rewrite The Lord of the Rings','480,000 words']];
-let model='GPT-5.5', scenario=3, targetML=0, shownML=0;
+let model='GPT-5.5', scenario=3, targetML=0, shownML=0, committedML=0, committedScaleMax=80;
 const modelsEl=document.getElementById('models'), scenariosEl=document.getElementById('scenarios');
 Object.keys(DATA).forEach((m,i)=>{const b=document.createElement('button');b.className='chip'+(m===model?' active':'');b.textContent=m;b.onclick=()=>{model=m;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');};modelsEl.appendChild(b)});
 SCENARIOS.forEach((s,i)=>{const b=document.createElement('button');b.className='scenario'+(i===scenario?' active':'');b.innerHTML=`<b>${s[0]}</b><span>${s[1]}</span>`;b.onclick=()=>{scenario=i;document.querySelectorAll('.scenario').forEach(x=>x.classList.remove('active'));b.classList.add('active');};scenariosEl.appendChild(b)});
 const prompts=document.getElementById('prompts'), period=document.getElementById('period');
-function calc(){return DATA[model][scenario]*Math.max(0,+prompts.value||0)*(+period.value)}
-function fmt(ml){
- const flOz=ml/29.5735295625,cups=ml/236.5882365,gallons=ml/3785.411784;
- if(cups<1)return (flOz<1?flOz.toFixed(2):flOz.toFixed(1))+' fl oz';
- if(cups<16)return (cups<10?cups.toFixed(2):cups.toFixed(1))+' cups';
- return (gallons<10?gallons.toFixed(2):gallons<100?gallons.toFixed(1):Math.round(gallons).toLocaleString())+' gal';
+function calc(){const n=Math.min(500,Math.max(0,+prompts.value||0));prompts.value=n;return DATA[model][scenario]*n*(+period.value)}
+function usMeasure(ml){
+  const gallons=ml/3785.411784;
+  const cups=ml/236.5882365;
+  const flOz=ml/29.5735295625;
+  if(gallons>=1) return `${gallons<10?gallons.toFixed(2):gallons<100?gallons.toFixed(1):Math.round(gallons).toLocaleString()} gal`;
+  if(cups>=1) return `${cups<10?cups.toFixed(2):cups.toFixed(1)} cups`;
+  if(flOz>=1) return `${flOz<10?flOz.toFixed(2):flOz.toFixed(1)} fl oz`;
+  return `${(ml/4.92892159375).toFixed(2)} tsp`;
 }
-function updateWaterRefs(ml){
- const refs=document.getElementById('waterRefs');
- if(!refs)return;
- refs.innerHTML='';
- const comparisons=[
-   {label:'One 8-minute shower',ml:95000,amount:'~25.1 gal'},
-   {label:'One laundry load',ml:170000,amount:'~44.9 gal'}
- ];
- // Map water quantity to visual height using the same current result as the
- // exhibition's scale. If a benchmark is far above the visible range, pin a
- // quiet annotation near the top instead of cluttering the field.
- const visibleMax=Math.max(ml*1.35,1);
- comparisons.forEach((r,i)=>{
-   const ratio=r.ml/visibleMax;
-   const el=document.createElement('div');
-   el.className='waterRef';
-   if(ratio<=1){
-     const bottom=7+ratio*70;
-     el.style.bottom=bottom+'%';
-     el.innerHTML=`<span>${r.label} · <em>${r.amount}</em></span>`;
-   }else{
-     // Keep off-scale benchmarks readable but exceptionally faint.
-     el.style.top=(9+i*4)+'%';
-     el.style.borderTopColor='rgba(102,143,143,.07)';
-     const times=r.ml/Math.max(ml,.000001);
-     const timesText=times>=1000?Math.round(times).toLocaleString()+'×':times>=10?Math.round(times)+'×':times.toFixed(1)+'×';
-     el.innerHTML=`<span>${r.label} · <em>${timesText} your result ↑</em></span>`;
-   }
-   refs.appendChild(el);
- });
+function fmt(ml){ return usMeasure(ml); }
+function comparisonText(ml){
+  const gal=ml/3785.411784;
+  if(gal>=95/3.785411784) return `≈ ${(gal/(95/3.785411784)).toFixed(gal/(95/3.785411784)<10?1:0)} showers`;
+  if(gal>=1) return `≈ ${(gal/17).toFixed(1)} laundry loads`;
+  return `≈ ${(ml/236.5882365).toFixed(1)} cups`;
 }
-function renderResult(ml){
- document.getElementById('amount').textContent=fmt(ml);
- document.getElementById('aiLegend').textContent='Your AI usage · '+fmt(ml);
- const cups=ml/236.5882365,showerML=95000;
- let c=cups<16?`≈ ${cups.toFixed(cups<1?2:1)} US cups`:ml<showerML?`≈ ${(ml/showerML*100).toFixed(ml/showerML*100<1?2:0)}% of one shower`:`≈ ${(ml/showerML).toFixed(ml/showerML<10?1:0)} showers`;
- document.getElementById('comparison').textContent=c;
- updateWaterRefs(ml);
+function preview(){
+  const ml=committedML;
+  document.getElementById('amount').textContent=usMeasure(ml);
+  document.getElementById('comparison').textContent=comparisonText(ml);
 }
-function preview(){}
-document.getElementById('calculate').onclick=()=>{targetML=calc();spawnPlan(targetML);renderResult(targetML)};
+function niceCeil(v){
+  if(v<=80) return 80;
+  const mag=Math.pow(10,Math.floor(Math.log10(v)));
+  const n=v/mag;
+  const step=n<=1?1:n<=2?2:n<=5?5:10;
+  return step*mag;
+}
+document.getElementById('calculate').onclick=()=>{
+  committedML=calc();
+  targetML=committedML;
+  committedScaleMax=niceCeil((committedML/3785.411784)*1.08);
+  spawnPlan(targetML);
+  preview();
+};
 const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d'),viz=document.getElementById('viz');
 let W=0,H=0,DPR=1,particles=[],pending=0,unitML=1,last=0;
-const MAX_PARTICLES=520;
+const MAX_PARTICLES=1100;
+let particleRadius=4, fillFraction=0, targetWaterY=0;
 const FLOOR_PAD=7;
 const WALL_PAD=5;
 
@@ -113,21 +113,42 @@ function resize(){
   canvas.width=W*DPR; canvas.height=H*DPR;
   ctx.setTransform(DPR,0,0,DPR,0,0);
 }
-addEventListener('resize',resize); resize();
+addEventListener('resize',()=>{
+  resize();
+  if(committedML>0) spawnPlan(committedML);
+});
+resize();
 
 function spawnPlan(ml){
-  const desired=Math.max(14,Math.min(MAX_PARTICLES,Math.ceil(Math.sqrt(Math.max(ml,.001))*8)));
-  unitML=ml/desired||.001;
+  const targetGal=Math.max(ml/3785.411784,0);
+  fillFraction=Math.min(1,targetGal/committedScaleMax);
+  const {topY,bottomY,scaleH}=scaleGeometry();
+  const vesselW=Math.max(1,W-2*WALL_PAD);
+
+  // Use a dense, stable bed. Area needed for a granular bed of target height:
+  // A ~= width * targetHeight * packing. Extra factor compensates for mound/edge voids.
+  const desired=targetGal>0 ? Math.round(620 + fillFraction*480) : 0;
+  const targetHeight=scaleH*fillFraction;
+  targetWaterY=bottomY-targetHeight;
+  const effectivePacking=.74;
+  // Small quantities were already visually accurate. As fill approaches the ceiling,
+  // progressively compensate for granular voids/mounding (about +12% at ~92% fill).
+  const highFillComp=1 + 0.28*Math.pow(fillFraction,1.8);
+  const correction=1.10*highFillComp;
+  const circleArea=vesselW*targetHeight*effectivePacking*correction;
+  particleRadius=desired ? Math.max(2.4,Math.min(18,Math.sqrt(circleArea/(desired*Math.PI)))) : 3;
+
+  unitML=desired ? ml/desired : 0;
   pending=desired;
   particles=[];
   shownML=0;
-  document.getElementById('scale').textContent=`visual scale · 1 particle ≈ ${fmt(unitML)}`;
+  document.getElementById('scale').textContent=desired ? `1 particle ≈ ${fmt(unitML)}` : '';
 }
 
 function addParticle(){
-  const r=3.2+Math.random()*2.2;
+  const r=particleRadius*(.88+Math.random()*.24);
   particles.push({
-    x:W*.18+Math.random()*W*.64,
+    x:W*.015+Math.random()*W*.97,
     y:70+Math.random()*40,
     vx:(Math.random()-.5)*1.0,
     vy:.2+Math.random()*.45,
@@ -135,6 +156,46 @@ function addParticle(){
     phase:Math.random()*Math.PI*2
   });
 }
+
+
+function splashAt(x,y){
+  // Broad physical impulse so a touch can move several layers of packed particles.
+  const radius=Math.max(125,Math.min(240,W*.18));
+  for(const a of particles){
+    const dx=a.x-x, dy=a.y-y;
+    const d=Math.hypot(dx,dy);
+    if(d<radius){
+      const falloff=Math.pow(1-d/radius,.55);
+      const nx=d>0?dx/d:(Math.random()-.5);
+      const ny=d>0?dy/d:-1;
+      const impulse=(5.0+7.5*falloff)*falloff;
+      a.vx += nx*impulse + (Math.random()-.5)*1.4;
+      // Strong upward bias lets buried touches visibly lift the surface.
+      a.vy += ny*impulse - 5.2*falloff;
+    }
+  }
+}
+
+function pointerPos(e){
+  const r=canvas.getBoundingClientRect();
+  return {x:e.clientX-r.left,y:e.clientY-r.top};
+}
+canvas.addEventListener('pointerdown',e=>{
+  e.preventDefault();
+  const p=pointerPos(e);
+  splashAt(p.x,p.y);
+  if(canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+});
+// On touchscreens, dragging a finger through the water creates a restrained wake.
+let lastDragSplash=0;
+canvas.addEventListener('pointermove',e=>{
+  if(!e.buttons && e.pointerType==='mouse') return;
+  const now=performance.now();
+  if(now-lastDragSplash<70) return;
+  lastDragSplash=now;
+  const p=pointerPos(e);
+  splashAt(p.x,p.y);
+});
 
 // Particle solver: gravity + real screen-edge containment + iterative
 // particle-particle collision resolution. Nothing is "locked"; the pile
@@ -167,7 +228,7 @@ function physics(){
   }
 
   // Multiple solver passes make a dense pile behave like a contained fluid/granular bed.
-  for(let pass=0; pass<4; pass++){
+  for(let pass=0; pass<8; pass++){
     for(let i=0;i<particles.length;i++){
       const a=particles[i];
       for(let j=i+1;j<particles.length;j++){
@@ -200,46 +261,149 @@ function physics(){
   }
 }
 
+function scaleGeometry(){
+  const topY=Math.max(120,H*.16);
+  const bottomY=H-Math.max(18,H*.02);
+  return {topY,bottomY,scaleH:Math.max(120,bottomY-topY)};
+}
+
 function draw(t){
   ctx.clearRect(0,0,W,H);
 
-  // No visible pool. The visualization's own bottom/right/left edges ARE the vessel.
-  // A faint cyan floor glow is the only cue that water is accumulating.
-  const floorY=H-FLOOR_PAD;
-  const glow=ctx.createLinearGradient(0,H-90,0,H);
-  glow.addColorStop(0,'rgba(0,217,255,0)');
-  glow.addColorStop(1,'rgba(11,111,130,.012)');
-  ctx.fillStyle=glow;
-  ctx.fillRect(0,H-90,W,90);
+  const {topY,bottomY,scaleH}=scaleGeometry();
+  const scaleMax=committedScaleMax;
+  const yForGal=(gal)=>bottomY-(gal/scaleMax)*scaleH;
 
+  // Major scale ticks adapt to any ceiling and screen dimensions.
+  const tickCount=5;
+  const majorTicks=Array.from({length:tickCount+1},(_,i)=>scaleMax*i/tickCount);
+
+  // Keep only reference quantities that are visually useful at the current scale.
+  // This prevents tiny household values from collapsing into one unreadable cluster
+  // when the scale expands into hundreds/thousands/millions of gallons.
+  const allRefs=[
+    {gal:1,label:'1 gallon'},
+    {gal:2.5,label:'dishwasher · ~2.5 gal'},
+    {gal:17,label:'laundry · ~17 gal'},
+    {gal:25,label:'10-min shower · ~25 gal'},
+    {gal:80,label:'bathtub · ~80 gal'}
+  ];
+  const minPixelGap=Math.max(28,H*.035);
+  const candidates=allRefs
+    .filter(r=>r.gal<=scaleMax)
+    .filter(r=>Math.abs(r.gal-scaleMax)/scaleMax>0.04)
+    .map(r=>({...r,y:yForGal(r.gal)}));
+  const refs=[];
+  for(const ref of candidates){
+    if(!refs.length || Math.abs(ref.y-refs[refs.length-1].y)>=minPixelGap) refs.push(ref);
+    else refs[refs.length-1]=ref; // prefer the larger, more meaningful comparison
+  }
+
+  // Background guides.
   ctx.save();
-  ctx.strokeStyle='rgba(11,111,130,.05)';
-  ctx.shadowColor='rgba(11,111,130,.06)';
-  ctx.shadowBlur=12;
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  ctx.moveTo(0,floorY+.5); ctx.lineTo(W,floorY+.5);
-  ctx.stroke();
+  for(const ref of refs){
+    ctx.strokeStyle='rgba(176,174,168,.055)';
+    ctx.lineWidth=1;
+    ctx.setLineDash([4,9]);
+    ctx.beginPath(); ctx.moveTo(18,ref.y); ctx.lineTo(W-18,ref.y); ctx.stroke();
+  }
   ctx.restore();
 
+  // Subtle floor glow.
+  const glowH=Math.min(100,H*.12);
+  const glow=ctx.createLinearGradient(0,H-glowH,0,H);
+  glow.addColorStop(0,'rgba(21,152,174,0)');
+  glow.addColorStop(1,'rgba(21,152,174,.025)');
+  ctx.fillStyle=glow;
+  ctx.fillRect(0,H-glowH,W,glowH);
+
+  // Particles are the water. The exact result line below remains the quantitative anchor.
+  // Particle sizing is calibrated so the settled bed approaches the result line.
+
+  // Particles.
   for(const a of particles){
     ctx.save();
-    ctx.fillStyle='#0B6F82';
-    ctx.shadowColor='rgba(11,111,130,.20)';
-    ctx.shadowBlur=1;
+    ctx.fillStyle='#1598AE';
+    ctx.shadowColor='rgba(21,152,174,.45)';
+    ctx.shadowBlur=3;
     ctx.globalAlpha=.88+.10*Math.sin(t*.0015+a.phase);
-    ctx.beginPath();
-    ctx.arc(a.x,a.y,a.r,0,Math.PI*2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(a.x,a.y,a.r,0,Math.PI*2); ctx.fill();
     ctx.restore();
   }
-}
 
+  // Clean foreground scale: labels remain exactly on their true lines.
+  ctx.save();
+  const fontSize=Math.max(10,Math.min(12,W*.0105));
+  ctx.font=`${fontSize}px 'IBM Plex Mono', monospace`;
+  ctx.textAlign='right';
+  ctx.textBaseline='middle';
+
+  // Major numeric ticks on the left.
+  ctx.textAlign='left';
+  for(const gal of majorTicks){
+    const y=yForGal(gal);
+    ctx.strokeStyle='rgba(226,224,218,.13)';
+    ctx.lineWidth=1;
+    ctx.setLineDash([3,8]);
+    ctx.beginPath(); ctx.moveTo(18,y); ctx.lineTo(W-18,y); ctx.stroke();
+    ctx.setLineDash([]);
+    const tickLabel=gal>=1000 ? Math.round(gal).toLocaleString()+' gal' : (Math.round(gal*10)/10)+' gal';
+    const tm=ctx.measureText(tickLabel);
+    ctx.fillStyle='rgba(15,15,15,.78)';
+    ctx.fillRect(20,y-fontSize*.72,tm.width+10,fontSize*1.45);
+    ctx.fillStyle='rgba(226,224,218,.48)';
+    ctx.fillText(tickLabel,25,y);
+  }
+  ctx.textAlign='right';
+
+  for(const ref of refs){
+    ctx.strokeStyle='rgba(226,224,218,.20)';
+    ctx.lineWidth=1;
+    ctx.setLineDash([5,8]);
+    ctx.beginPath(); ctx.moveTo(18,ref.y); ctx.lineTo(W-18,ref.y); ctx.stroke();
+    ctx.setLineDash([]);
+
+    const metrics=ctx.measureText(ref.label), x=W-22;
+    ctx.fillStyle='rgba(15,15,15,.82)';
+    ctx.fillRect(x-metrics.width-7,ref.y-fontSize*.78,metrics.width+12,fontSize*1.55);
+    ctx.fillStyle='rgba(226,224,218,.68)';
+    ctx.fillText(ref.label,x,ref.y);
+  }
+
+  // Exact result marker: this is the authoritative quantitative reading.
+  // It uses the same yForGal() mapping as every reference and the ceiling.
+  if(committedML>0){
+    const resultGal=committedML/3785.411784;
+    const resultY=yForGal(resultGal);
+    ctx.strokeStyle='rgba(21,152,174,.92)';
+    ctx.lineWidth=2;
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(18,resultY); ctx.lineTo(W-18,resultY); ctx.stroke();
+
+    const resultLabel=`${resultGal<10?resultGal.toFixed(2):resultGal<1000?resultGal.toFixed(0):Math.round(resultGal).toLocaleString()} gal`;
+    const rm=ctx.measureText(resultLabel);
+    ctx.fillStyle='rgba(15,15,15,.9)';
+    ctx.fillRect(18,resultY-fontSize-8,rm.width+12,fontSize+10);
+    ctx.fillStyle='rgba(21,152,174,.95)';
+    ctx.textAlign='left';
+    ctx.textBaseline='bottom';
+    ctx.fillText(resultLabel,24,resultY-3);
+    ctx.textAlign='right';
+    ctx.textBaseline='middle';
+  }
+
+  // Subtle ceiling rule; the top major tick already carries the ceiling value.
+  ctx.strokeStyle='rgba(226,224,218,.18)';
+  ctx.setLineDash([2,8]);
+  ctx.beginPath(); ctx.moveTo(18,topY); ctx.lineTo(W-18,topY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+}
 function loop(t){
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(!reduced){
     // Slightly slower pour so the accumulating, colliding pile is legible.
-    if(pending>0 && t-last>24){
+    if(pending>0 && t-last>8){
       addParticle(); pending--; shownML+=unitML; last=t;
     }
     physics();
@@ -247,22 +411,7 @@ function loop(t){
   draw(t);
   requestAnimationFrame(loop);
 }
-targetML=calc(); renderResult(targetML); spawnPlan(targetML); requestAnimationFrame(loop);
+committedML=calc(); targetML=committedML; committedScaleMax=niceCeil((committedML/3785.411784)*1.08); preview(); spawnPlan(targetML); requestAnimationFrame(loop);
 </script>
 </body>
 </html>
-
-<style>
-@media (max-width:1000px){
-  .app{grid-template-columns:30% 70%!important;height:100vh!important}
-  .form{height:100vh!important;border-right:1px solid var(--border)!important}
-  .viz{height:100vh!important;min-height:0!important}
-}
-canvas{position:absolute;inset:0;width:100%;height:100%}
-
-.waterRefs{position:absolute;inset:0;pointer-events:none;z-index:1}
-.waterRef{position:absolute;left:8%;right:5%;height:1px;border-top:1px dashed rgba(102,143,143,.13)}
-.waterRef span{position:absolute;right:0;top:-18px;font:500 10px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:rgba(176,174,168,.20);white-space:nowrap}
-.waterRef em{font-style:normal;color:rgba(102,143,143,.22)}
-
-</style>
