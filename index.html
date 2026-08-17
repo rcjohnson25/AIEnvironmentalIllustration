@@ -36,7 +36,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor
 <div><label class="label" for="period">Time period</label><select id="period" class="input"><option value="1">One day</option><option value="7">One week</option><option value="30" selected>One month</option><option value="365">One year</option></select></div>
 </div>
 <button class="btn" id="calculate">Calculate usage</button>
-<div class="method"><details><summary>How is this estimated?</summary><p>Values use the supplied EcoLogits-derived model/scenario estimates as fixed baselines. The calculator multiplies the selected per-request estimate by requests per day and days. These are modeled estimates, not direct measurements of an individual request; real water use varies with hardware, cooling, datacenter conditions and workload.</p></details></div>
+<div class="method"><details><summary>How is this estimated?</summary><p>Values use the supplied EcoLogits-derived model/scenario estimates as fixed baselines. The calculator multiplies the selected per-request estimate by requests per day and days. These are modeled estimates, not direct measurements of an individual request; real water use varies with hardware, cooling, datacenter conditions and workload. This visualization was designed by Robert Johnson under the supervision of Edyta Kuzian. This project is the final output of the Creative Inquiry: AI Aesthetics and Ethics</p></details></div>
 </section>
 <section class="viz" id="viz"><canvas id="canvas"></canvas>
 <div class="readout">
