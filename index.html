@@ -36,7 +36,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor
 <div><label class="label" for="period">Time period</label><select id="period" class="input"><option value="1">One day</option><option value="7">One week</option><option value="30" selected>One month</option><option value="365">One year</option></select></div>
 </div>
 <button class="btn" id="calculate">Calculate usage</button>
-<div class="method"><details><summary>How is this estimated?</summary><p>Values use the supplied EcoLogits-derived model/scenario estimates as fixed baselines. The calculator multiplies the selected per-request estimate by requests per day and days. These are modeled estimates, not direct measurements of an individual request; real water use varies with hardware, cooling, datacenter conditions and workload. This visualization was designed by Robert Johnson under the supervision of Edyta Kuzian. This project is the final output of the Creative Inquiry: AI Aesthetics and Ethics</p></details></div>
+<div class="method"><details><summary>How is this estimated?</summary><p>Values use the supplied EcoLogits-derived model/scenario estimates as fixed baselines. The calculator multiplies the selected per-request estimate by requests per day and days. These are modeled estimates, not direct measurements of an individual request; real water use varies with hardware, cooling, datacenter conditions and workload.</p></details></div>
 </section>
 <section class="viz" id="viz"><canvas id="canvas"></canvas>
 <div class="readout">
@@ -227,34 +227,60 @@ function physics(){
     }
   }
 
-  // Multiple solver passes make a dense pile behave like a contained fluid/granular bed.
+  // Spatial hash grid: each particle only checks its own cell and nearby cells.
+  // This preserves the same collision response while avoiding O(n^2) comparisons.
+  const maxR=particles.reduce((m,p)=>Math.max(m,p.r),4);
+  const cellSize=Math.max(12,maxR*2.35);
+
   for(let pass=0; pass<8; pass++){
+    const grid=new Map();
+
     for(let i=0;i<particles.length;i++){
       const a=particles[i];
-      for(let j=i+1;j<particles.length;j++){
-        const b=particles[j];
-        let dx=b.x-a.x, dy=b.y-a.y;
-        let d2=dx*dx+dy*dy;
-        const min=a.r+b.r;
-        if(d2>=min*min) continue;
-        if(d2<0.0001){ dx=.01; dy=0; d2=.0001; }
-        const d=Math.sqrt(d2), nx=dx/d, ny=dy/d;
-        const overlap=min-d;
+      const cx=Math.floor(a.x/cellSize);
+      const cy=Math.floor(a.y/cellSize);
+      const key=cx+','+cy;
+      let bucket=grid.get(key);
+      if(!bucket){ bucket=[]; grid.set(key,bucket); }
+      bucket.push(i);
+    }
 
-        // Separate equally.
-        a.x-=nx*overlap*.5; a.y-=ny*overlap*.5;
-        b.x+=nx*overlap*.5; b.y+=ny*overlap*.5;
+    for(let i=0;i<particles.length;i++){
+      const a=particles[i];
+      const cx=Math.floor(a.x/cellSize);
+      const cy=Math.floor(a.y/cellSize);
 
-        // Resolve relative velocity along collision normal.
-        const rvx=b.vx-a.vx, rvy=b.vy-a.vy;
-        const rel=rvx*nx+rvy*ny;
-        if(rel<0){
-          const restitution=.12;
-          const impulse=-(1+restitution)*rel*.5;
-          a.vx-=impulse*nx; a.vy-=impulse*ny;
-          b.vx+=impulse*nx; b.vy+=impulse*ny;
-          a.vx*=.985; a.vy*=.985;
-          b.vx*=.985; b.vy*=.985;
+      for(let oy=-1;oy<=1;oy++){
+        for(let ox=-1;ox<=1;ox++){
+          const bucket=grid.get((cx+ox)+','+(cy+oy));
+          if(!bucket) continue;
+
+          for(const j of bucket){
+            if(j<=i) continue;
+            const b=particles[j];
+            let dx=b.x-a.x, dy=b.y-a.y;
+            let d2=dx*dx+dy*dy;
+            const min=a.r+b.r;
+            if(d2>=min*min) continue;
+            if(d2<0.0001){ dx=.01; dy=0; d2=.0001; }
+
+            const d=Math.sqrt(d2), nx=dx/d, ny=dy/d;
+            const overlap=min-d;
+
+            a.x-=nx*overlap*.5; a.y-=ny*overlap*.5;
+            b.x+=nx*overlap*.5; b.y+=ny*overlap*.5;
+
+            const rvx=b.vx-a.vx, rvy=b.vy-a.vy;
+            const rel=rvx*nx+rvy*ny;
+            if(rel<0){
+              const restitution=.12;
+              const impulse=-(1+restitution)*rel*.5;
+              a.vx-=impulse*nx; a.vy-=impulse*ny;
+              b.vx+=impulse*nx; b.vy+=impulse*ny;
+              a.vx*=.985; a.vy*=.985;
+              b.vx*=.985; b.vy*=.985;
+            }
+          }
         }
       }
     }
